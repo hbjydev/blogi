@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use atrium_api::types::string::{Datetime, Did, Handle};
+use atrium_api::types::string::{AtIdentifier, Datetime, Did, Handle};
 use blogi_errors::Result;
 use blogi_lexicons::moe::hayden::blogi::actor::defs::{ProfileViewDetailed, ProfileViewDetailedData};
 use chrono::{DateTime, FixedOffset};
@@ -9,7 +9,8 @@ use crate::pg::PostgresDatastore;
 
 #[async_trait]
 pub trait ActorRepository {
-    async fn list_actors(&self) -> Result<Vec<ProfileViewDetailed>>;
+    async fn list_actors(&self, actors: Vec<AtIdentifier>) -> Result<Vec<ProfileViewDetailed>>;
+    async fn get_actor(&self, actor: AtIdentifier) -> Result<Option<ProfileViewDetailed>>;
 }
 
 #[derive(FromRow)]
@@ -47,7 +48,9 @@ impl TryInto<ProfileViewDetailed> for PgProfileRow {
 
 #[async_trait]
 impl ActorRepository for PostgresDatastore {
-    async fn list_actors(&self) -> Result<Vec<ProfileViewDetailed>> {
+    async fn list_actors(&self, actors: Vec<AtIdentifier>) -> Result<Vec<ProfileViewDetailed>> {
+        let actor_strs = actors.iter().map(|a| { a.as_ref().to_string() }).collect::<Vec<String>>();
+
         let data = query_as!(
             PgProfileRow,
             "SELECT
@@ -57,7 +60,10 @@ impl ActorRepository for PostgresDatastore {
                 description,
                 created_at,
                 indexed_at
-            FROM actors",
+            FROM actors
+            WHERE
+                did = ANY($1::text[]) or handle = ANY($1::text[])",
+            actor_strs.as_slice(),
         )
             .fetch_all(&self.0)
             .await?;
@@ -68,5 +74,10 @@ impl ActorRepository for PostgresDatastore {
             .collect::<Result<Vec<ProfileViewDetailed>>>()?;
 
         Ok(actors)
+    }
+
+    async fn get_actor(&self, actor: AtIdentifier) -> Result<Option<ProfileViewDetailed>> {
+        let actors = self.list_actors(vec![actor]).await?;
+        Ok(actors.into_iter().next())
     }
 }

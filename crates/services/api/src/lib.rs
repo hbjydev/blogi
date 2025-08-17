@@ -22,6 +22,7 @@ pub async fn start(
     let router = Router::new()
         .route("/xrpc/_health", get(handlers::health::xrpc_health))
 
+        .route("/xrpc/moe.hayden.blogi.actor.getProfile", get(handlers::actor::get_actor))
         .route("/xrpc/moe.hayden.blogi.actor.getProfiles", get(handlers::actor::list_actors))
 
         .with_state(state)
