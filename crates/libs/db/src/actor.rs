@@ -33,7 +33,7 @@ impl TryInto<ProfileViewDetailed> for PgProfileRow {
 
         Ok(ProfileViewDetailedData {
             did,
-            handle: handle,
+            handle,
             display_name: Some(self.display_name),
             description: self.description,
             avatar: None, // Assuming avatar is not stored in this row
