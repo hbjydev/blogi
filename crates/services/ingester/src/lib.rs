@@ -52,7 +52,6 @@ pub async fn start(datastore: Box<dyn blogi_db::Datastore>) -> Result<()> {
 pub struct ProfileIngestor(pub Box<dyn Datastore>);
 
 impl ProfileIngestor {
-    /// Insert a profile into the datastore.
     #[tracing::instrument(skip(self, record))]
     pub async fn insert_profile(
         &self,
@@ -66,7 +65,6 @@ impl ProfileIngestor {
     }
 }
 
-/// A cool ingestor implementation. Will just print the message. Does not do verification.
 #[async_trait]
 impl LexiconIngestor for ProfileIngestor {
     #[tracing::instrument(skip(self))]
