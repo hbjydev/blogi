@@ -19,7 +19,13 @@ pub enum BlogiError {
     Internal(#[from] anyhow::Error),
 
     #[error("database error: {0}")]
-    DbErr(#[from] sqlx::Error)
+    DbErr(#[from] sqlx::Error),
+
+    #[error("redis error: {0}")]
+    RedisErr(#[from] redis::RedisError),
+
+    #[error("chrono parse error: {0}")]
+    ChronoParseErr(#[from] chrono::ParseError)
 }
 
 #[cfg(feature = "axum")]

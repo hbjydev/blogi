@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use atrium_api::types::string::{AtIdentifier, Datetime, Did, Handle};
 use blogi_errors::Result;
-use blogi_lexicons::moe::hayden::blogi::actor::defs::{ProfileViewDetailed, ProfileViewDetailedData};
+use blogi_lexicons::moe::hayden::blogi::actor::{defs::{ProfileViewDetailed, ProfileViewDetailedData}, profile};
 use chrono::{DateTime, FixedOffset};
 use sqlx::{prelude::FromRow, query_as};
 use blogi_utils::resolve_identity;
@@ -12,11 +12,7 @@ use crate::pg::PostgresDatastore;
 pub trait ActorRepository {
     async fn list_actors(&self, actors: Vec<AtIdentifier>) -> Result<Vec<ProfileViewDetailed>>;
     async fn get_actor(&self, actor: AtIdentifier) -> Result<Option<ProfileViewDetailed>>;
-    async fn upsert_actor(
-        &self,
-        did: Did,
-        record: &blogi_lexicons::moe::hayden::blogi::actor::profile::RecordData,
-    ) -> Result<()>;
+    async fn upsert_actor(&self, did: Did, record: &profile::RecordData) -> Result<()>;
 }
 
 #[derive(FromRow)]
@@ -87,11 +83,7 @@ impl ActorRepository for PostgresDatastore {
         Ok(actors.into_iter().next())
     }
 
-    async fn upsert_actor(
-        &self,
-        did: Did,
-        profile: &blogi_lexicons::moe::hayden::blogi::actor::profile::RecordData,
-    ) -> Result<()> {
+    async fn upsert_actor(&self, did: Did, profile: &profile::RecordData) -> Result<()> {
         let display_name = Some(profile.display_name.clone());
         let description = profile.description.clone();
 

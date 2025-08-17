@@ -8,6 +8,9 @@ pub mod pg;
 // Repositories
 pub mod actor;
 
+// Cache
+pub mod cache;
+
 #[async_trait]
 pub trait Datastore:
     actor::ActorRepository
