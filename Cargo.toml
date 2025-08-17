@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/blogi", "crates/libs/db", "crates/libs/errors", "crates/libs/lexicons", "crates/services/api", "crates/services/ingester"]
+members = ["crates/blogi", "crates/libs/db", "crates/libs/errors", "crates/libs/lexicons", "crates/libs/utils", "crates/services/api", "crates/services/ingester"]
 
 [workspace.dependencies]
 anyhow = "1.0.99"
@@ -11,3 +11,7 @@ axum = "0.8.4"
 serde = "1.0.219"
 sqlx = "0.8.6"
 async-trait = "0.1.89"
+atrium-api = "0.25.5"
+atrium-xrpc = "0.12.3"
+metrics = "0.24.2"
+redis = "0.32.5"

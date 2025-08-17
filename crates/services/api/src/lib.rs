@@ -21,8 +21,11 @@ pub async fn start(
 
     let router = Router::new()
         .route("/xrpc/_health", get(handlers::health::xrpc_health))
-        .with_state(state)
 
+        .route("/xrpc/moe.hayden.blogi.actor.getProfile", get(handlers::actor::get_actor))
+        .route("/xrpc/moe.hayden.blogi.actor.getProfiles", get(handlers::actor::list_actors))
+
+        .with_state(state)
         .layer(TimeoutLayer::new(Duration::from_secs(10)))
         .layer(
             TraceLayer::new_for_http()

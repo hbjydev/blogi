@@ -2,6 +2,7 @@
 //!Definitions for the `moe.hayden.blogi.actor` namespace.
 pub mod defs;
 pub mod get_profile;
+pub mod get_profiles;
 pub mod profile;
 #[derive(Debug)]
 pub struct Profile;

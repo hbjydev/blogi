@@ -160,6 +160,36 @@ where
             _ => Err(atrium_xrpc::Error::UnexpectedResponseType),
         }
     }
+    ///Get detailed profile views of multiple actors.
+    pub async fn get_profiles(
+        &self,
+        params: crate::moe::hayden::blogi::actor::get_profiles::Parameters,
+    ) -> atrium_xrpc::Result<
+        crate::moe::hayden::blogi::actor::get_profiles::Output,
+        crate::moe::hayden::blogi::actor::get_profiles::Error,
+    > {
+        let response = self
+            .xrpc
+            .send_xrpc::<
+                _,
+                (),
+                _,
+                _,
+            >(
+                &atrium_xrpc::XrpcRequest {
+                    method: http::Method::GET,
+                    nsid: crate::moe::hayden::blogi::actor::get_profiles::NSID.into(),
+                    parameters: Some(params),
+                    input: None,
+                    encoding: None,
+                },
+            )
+            .await?;
+        match response {
+            atrium_xrpc::OutputDataOrBytes::Data(data) => Ok(data),
+            _ => Err(atrium_xrpc::Error::UnexpectedResponseType),
+        }
+    }
 }
 impl<T> moe::hayden::blogi::blog::Service<T>
 where
