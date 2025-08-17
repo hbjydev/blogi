@@ -1,8 +1,8 @@
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use async_trait::async_trait;
-use atrium_api::{com::atproto::repo::apply_writes::Create, types::string::Did};
+use atrium_api::{types::string::Did};
 use blogi_db::Datastore;
 use blogi_lexicons::moe::hayden::blogi::actor::profile;
 use rocketman::{connection::JetstreamConnection, handler, ingestion::LexiconIngestor, options::JetstreamOptions, types::event::{Event, Operation}};
