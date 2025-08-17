@@ -32,7 +32,7 @@ impl TryInto<ProfileViewDetailed> for PgProfileRow {
             .map_err(|e| anyhow::anyhow!(e))?;
 
         Ok(ProfileViewDetailedData {
-            did: did,
+            did,
             handle: handle,
             display_name: Some(self.display_name),
             description: self.description,
