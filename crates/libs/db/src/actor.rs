@@ -95,7 +95,7 @@ impl ActorRepository for PostgresDatastore {
         let display_name = Some(profile.display_name.clone());
         let description = profile.description.clone();
 
-        let ident = resolve_identity(&did.to_string(), "https://public.api.bsky.app").await?;
+        let ident = resolve_identity(&did, "https://public.api.bsky.app").await?;
         let handle_raw = ident.doc.also_known_as.first().to_owned().unwrap();
         let handle = if handle_raw.starts_with("at://") {
             handle_raw.clone()[5..].to_string()
