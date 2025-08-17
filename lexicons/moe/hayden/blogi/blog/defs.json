@@ -1,0 +1,34 @@
+{
+  "lexicon": 1,
+  "id": "moe.hayden.blogi.blog.defs",
+  "defs": {
+    "postView": {
+      "type": "object",
+      "required": ["uri", "cid", "author", "record", "indexedAt"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" },
+        "cid": { "type": "string", "format": "cid" },
+        "author": {
+          "type": "ref",
+          "ref": "moe.hayden.blogi.actor.defs#profileView"
+        },
+        "record": {
+          "type": "ref",
+          "ref": "#postViewRecord"
+        },
+        "commentCount": { "type": "integer" },
+        "indexedAt": { "type": "string", "format": "datetime" }
+      }
+    },
+    "postViewRecord": {
+      "type": "object",
+      "required": ["title", "content", "createdAt"],
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "datetime" },
+        "updatedAt": { "type": "string", "format": "datetime" }
+      }
+    }
+  }
+}

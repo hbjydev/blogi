@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = ["crates/blogi", "crates/libs/db", "crates/libs/errors", "crates/libs/lexicons", "crates/services/api", "crates/services/ingester"]
+
+[workspace.dependencies]
+anyhow = "1.0.99"
+thiserror = "2.0.15"
+tokio = "1"
+tracing = "0.1.41"
+axum = "0.8.4"
+serde = "1.0.219"
+sqlx = "0.8.6"
+async-trait = "0.1.89"

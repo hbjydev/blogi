@@ -1,0 +1,17 @@
+[package]
+name = "blogi"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+blogi-api = { path = "../services/api" }
+blogi-ingester = { path = "../services/ingester" }
+
+blogi-db = { path = "../libs/db" }
+
+clap = { version = "4.5.45", features = ["derive", "env"] }
+
+anyhow = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+tracing = { workspace = true }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }

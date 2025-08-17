@@ -1,0 +1,9 @@
+[env]
+_.file = ".env"
+
+[tools]
+just = "1.40.0"
+rust = "1.87.0"
+
+"cargo:https://github.com/fatfingers23/esquema" = { version = "rev:9ef00b9", crate = "esquema-cli" }
+"cargo:sqlx-cli" = { version = "0.8.6", features = "postgres" }

@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "moe.hayden.blogi.blog.getEntriesForAuthor",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a list of posts for a specific account.",
+      "parameters": {
+        "type": "params",
+        "required": ["authorDid"],
+        "properties": {
+          "authorDid": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "Handle or DID of account to fetch posts of."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["posts"],
+          "properties": {
+            "posts": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "moe.hayden.blogi.blog.defs#postView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

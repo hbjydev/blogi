@@ -1,0 +1,9 @@
+[package]
+name = "blogi-ingester"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+blogi-db = { path = "../../libs/db" }
+tracing = { workspace = true }
+anyhow = { workspace = true }

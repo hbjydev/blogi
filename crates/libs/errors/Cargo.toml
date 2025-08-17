@@ -1,0 +1,15 @@
+[package]
+name = "blogi-errors"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+axum = ["dep:axum", "dep:serde"]
+default = ["axum"]
+
+[dependencies]
+axum = { workspace = true, optional = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true, optional = true, features = ["derive"] }
+sqlx = { workspace = true }

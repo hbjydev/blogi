@@ -1,0 +1,11 @@
+[package]
+name = "blogi-db"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+async-trait = "0.1.89"
+anyhow = { workspace = true }
+blogi-errors = { path = "../errors" }
+sqlx = { workspace = true, features = ["postgres", "runtime-tokio"] }
+serde = { version = "1.0.219", features = ["derive"] }

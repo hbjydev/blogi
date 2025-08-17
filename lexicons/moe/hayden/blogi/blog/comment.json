@@ -1,0 +1,28 @@
+{
+  "lexicon": 1,
+  "id": "moe.hayden.blogi.blog.comment",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["post", "content"],
+        "properties": {
+          "post": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef"
+          },
+
+          "content": {
+            "type": "string",
+            "maxLength": 2048
+          },
+
+          "createdAt": { "type": "string", "format": "datetime" },
+          "updatedAt": { "type": "string", "format": "datetime" }
+        }
+      }
+    }
+  }
+}
