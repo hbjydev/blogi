@@ -4,6 +4,7 @@ use blogi_errors::Result;
 use blogi_lexicons::moe::hayden::blogi::actor::defs::{ProfileViewDetailed, ProfileViewDetailedData};
 use chrono::{DateTime, FixedOffset};
 use sqlx::{prelude::FromRow, query_as};
+use blogi_utils::resolve_identity;
 
 use crate::pg::PostgresDatastore;
 
@@ -11,6 +12,11 @@ use crate::pg::PostgresDatastore;
 pub trait ActorRepository {
     async fn list_actors(&self, actors: Vec<AtIdentifier>) -> Result<Vec<ProfileViewDetailed>>;
     async fn get_actor(&self, actor: AtIdentifier) -> Result<Option<ProfileViewDetailed>>;
+    async fn upsert_actor(
+        &self,
+        did: Did,
+        record: &blogi_lexicons::moe::hayden::blogi::actor::profile::RecordData,
+    ) -> Result<()>;
 }
 
 #[derive(FromRow)]
@@ -79,5 +85,46 @@ impl ActorRepository for PostgresDatastore {
     async fn get_actor(&self, actor: AtIdentifier) -> Result<Option<ProfileViewDetailed>> {
         let actors = self.list_actors(vec![actor]).await?;
         Ok(actors.into_iter().next())
+    }
+
+    async fn upsert_actor(
+        &self,
+        did: Did,
+        profile: &blogi_lexicons::moe::hayden::blogi::actor::profile::RecordData,
+    ) -> Result<()> {
+        let display_name = Some(profile.display_name.clone());
+        let description = profile.description.clone();
+
+        let ident = resolve_identity(&did.to_string(), "https://public.api.bsky.app").await?;
+        let handle_raw = ident.doc.also_known_as.first().to_owned().unwrap();
+        let handle = if handle_raw.starts_with("at://") {
+            handle_raw.clone()[5..].to_string()
+        } else {
+            handle_raw.clone()
+        };
+
+        let created_time = profile.created_at.clone().unwrap_or(Datetime::now());
+        let chrono_time = created_time.as_ref();
+
+        sqlx::query!(
+            r#"
+                INSERT INTO actors (did, handle, display_name, description, created_at, indexed_at)
+                VALUES ($1, $2, $3, $4, $5, NOW())
+                ON CONFLICT (did) DO UPDATE SET
+                    handle = EXCLUDED.handle,
+                    display_name = EXCLUDED.display_name,
+                    description = EXCLUDED.description,
+                    created_at = EXCLUDED.created_at
+            "#,
+            did.as_ref(),
+            handle,
+            display_name,
+            description,
+            chrono_time,
+        )
+            .execute(&self.0)
+            .await?;
+
+        Ok(())
     }
 }

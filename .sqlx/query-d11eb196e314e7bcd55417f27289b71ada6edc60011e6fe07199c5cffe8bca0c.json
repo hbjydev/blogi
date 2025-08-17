@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO actors (did, handle, display_name, description, created_at, indexed_at)\n                VALUES ($1, $2, $3, $4, $5, NOW())\n                ON CONFLICT (did) DO UPDATE SET\n                    handle = EXCLUDED.handle,\n                    display_name = EXCLUDED.display_name,\n                    description = EXCLUDED.description,\n                    created_at = EXCLUDED.created_at\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d11eb196e314e7bcd55417f27289b71ada6edc60011e6fe07199c5cffe8bca0c"
+}

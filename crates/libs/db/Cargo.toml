@@ -12,3 +12,4 @@ sqlx = { workspace = true, features = ["chrono", "postgres", "runtime-tokio"] }
 serde = { version = "1.0.219", features = ["derive"] }
 atrium-api = { version = "0.25.5", default-features = false }
 chrono = "0.4.41"
+blogi-utils = { version = "0.1.0", path = "../utils" }

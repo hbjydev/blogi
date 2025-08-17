@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 async-trait = { workspace = true }
+atrium-api = { workspace = true }
 blogi-db = { path = "../../libs/db" }
 tracing = { workspace = true }
 anyhow = { workspace = true }
@@ -13,3 +14,4 @@ blogi-errors = { path = "../../libs/errors" }
 blogi-lexicons = { path = "../../libs/lexicons" }
 serde_json = "1.0.142"
 tokio = { workspace = true, features = ["sync"] }
+blogi-utils = { version = "0.1.0", path = "../../libs/utils" }
