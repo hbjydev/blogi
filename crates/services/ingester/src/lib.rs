@@ -1,10 +1,11 @@
 use std::{collections::HashMap, sync::{Arc, Mutex}};
 
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use async_trait::async_trait;
-use atrium_api::types::string::Did;
+use atrium_api::{com::atproto::repo::apply_writes::Create, types::string::Did};
 use blogi_db::Datastore;
-use rocketman::{connection::JetstreamConnection, handler, ingestion::LexiconIngestor, options::JetstreamOptions, types::event::Event};
+use blogi_lexicons::moe::hayden::blogi::actor::profile;
+use rocketman::{connection::JetstreamConnection, handler, ingestion::LexiconIngestor, options::JetstreamOptions, types::event::{Event, Operation}};
 use serde_json::Value;
 use tracing::info;
 
@@ -71,24 +72,36 @@ impl LexiconIngestor for ProfileIngestor {
     #[tracing::instrument(skip(self))]
     async fn ingest(&self, message: Event<Value>) -> Result<()> {
         if let Some(commit) = &message.commit {
-            if let Some(ref record) = commit.record {
-                let record = serde_json::from_value::<
-                    blogi_lexicons::moe::hayden::blogi::actor::profile::RecordData,
-                >(record.clone())?;
-                if let Some(ref commit) = message.commit {
-                    if let Some(ref _cid) = commit.cid {
-                        // TODO: verify cid
-                        self.insert_profile(
-                            Did::new(message.did)
-                                .map_err(|e| anyhow::anyhow!("Failed to create Did: {}", e))?,
-                            &record,
-                        )
-                        .await?;
+            match commit.operation {
+                Operation::Create | Operation::Update => {
+                    info!("ingesting profile commit: {:?}", commit);
+                    if let Some(ref record) = commit.record {
+                        let record = serde_json::from_value::<profile::RecordData>(
+                            record.clone()
+                        )?;
+
+                        if let Some(ref _cid) = commit.cid {
+                            // TODO: verify cid
+                            self.0
+                                .upsert_actor(
+                                    Did::new(message.did)
+                                        .map_err(|e| anyhow::anyhow!("Failed to create Did: {}", e))?,
+                                    &record
+                                )
+                                .await
+                                .map_err(|e| anyhow::anyhow!("Failed to insert profile: {}", e))?;
+                        }
+                    } else {
+                        tracing::warn!(
+                            "Profile commit without record: {:?}",
+                            commit,
+                        );
                     }
+                },
+                Operation::Delete => {
+                    info!("deleting profile: {:?}", commit);
                 }
-            } else {
-                info!("commit has no record, assuming deletion");
-            }
+            };
         } else {
             return Err(anyhow::anyhow!("Message has no commit"));
         }

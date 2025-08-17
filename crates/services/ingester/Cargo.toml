@@ -15,3 +15,4 @@ blogi-lexicons = { path = "../../libs/lexicons" }
 serde_json = "1.0.142"
 tokio = { workspace = true, features = ["sync"] }
 blogi-utils = { version = "0.1.0", path = "../../libs/utils" }
+metrics = { workspace = true }

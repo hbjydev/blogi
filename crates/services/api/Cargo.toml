@@ -8,6 +8,7 @@ blogi-lexicons = { path = "../../libs/lexicons" }
 blogi-errors = { path = "../../libs/errors", features = ["axum"] }
 blogi-db = { path = "../../libs/db" }
 tracing = { workspace = true }
+metrics = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 axum = { workspace = true, features = ["macros"] }
